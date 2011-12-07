@@ -1,0 +1,99 @@
+﻿<!doctype html>
+<html lang="en">
+        <head>
+                <title>Spark</title>
+                <style type="text/css">
+                        html,body{
+                                margin:0;
+                                padding:0;
+                                text-align:center;
+                                background:#1A75CF;
+                        }
+                        #spark{
+                                margin:5px auto;
+                        }
+                </style>
+        </head>
+        <body>
+                <canvas id="spark"></canvas>
+                <script>
+                        var spark=document.getElementById('spark');
+                        var size, middle_x, middle_y, d, t;
+                        function resize(){
+                            size=Math.min(window.innerHeight || document.documentElement.clientHeight,window.innerWidth || document.documentElement.clientWidth)*0.90;
+                            middle_x=size/2;
+                            middle_y=size/2;
+                            d=size*0.4;
+                            t=20;
+                            spark.style.width=size+'px';
+                            spark.style.height=size+'px';
+                            spark.width=size;
+                            spark.height=size;
+                        }
+                        resize();
+                        document.body.onresize=resize;
+                       
+                        if(spark.getContext){
+                                var ctx=spark.getContext('2d');
+                                var start_angle=20;
+                                setInterval(function(){
+                                        spark.width=size;
+                                        start_angle=(start_angle>=360 ? 1 : start_angle+1);
+                                        for(var a=start_angle; a<360+start_angle; a+=60){
+                                                petal(ctx,middle_x,middle_y,a,d,t);
+                                        }
+                                },50);
+                        }
+                       
+                        function petal(ctx,cx /* center x */,cy /* center y */,a /* angle */,d /* distance */,t /* thickness */){
+                                var rad=0.0174532925;
+                                var r=Math.round;
+                                var cos=Math.cos;
+                                var sin=Math.sin;
+                                var outer_p1 = {
+                                        x:r(cx+d*cos(a * rad)),
+                                        y:r(cy+d*sin(a * rad))
+                                };
+                                var outer_p2 = {
+                                        x:r(cx+d*cos((a + t) * rad)),
+                                        y:r(cy+d*sin((a + t) * rad))
+                                };
+                                var outer_cp1 = {
+                                        x:r(cx+(d*1.3)*cos(a * rad)),
+                                        y:r(cy+(d*1.3)*sin(a * rad))
+                                };
+                                var outer_cp2 = {
+                                        x:r(cx+(d*1.3)*cos((a + t) * rad)),
+                                        y:r(cy+(d*1.3)*sin((a + t) * rad))
+                                };
+                                var outer_midpoint = {
+                                        x:r(cx+d*cos((a + t/2) * rad)),
+                                        y:r(cy+d*sin((a + t/2) * rad))
+                                };
+                                var inner_p1 = {
+                                        x:r(cx+(d/2.5)*cos(a * rad)),
+                                        y:r(cy+(d/2.5)*sin(a * rad))
+                                };
+                                var inner_p2 = {
+                                        x:r(cx+(d/2.5)*cos((a + t) * rad)),
+                                        y:r(cy+(d/2.5)*sin((a + t) * rad))
+                                };
+                                var inner_cp1 = {
+                                        x:r(cx+(d/3.2)*cos(a * rad)),
+                                        y:r(cy+(d/3.2)*sin(a * rad))
+                                };
+                                var inner_cp2 = {
+                                        x:r(cx+(d/3.2)*cos((a + t) * rad)),
+                                        y:r(cy+(d/3.2)*sin((a + t) * rad))
+                                };
+                                ctx.fillStyle='#FDBB30';
+                                ctx.beginPath();
+                                ctx.moveTo(inner_p1.x, inner_p1.y);
+                                ctx.bezierCurveTo(inner_cp1.x,inner_cp1.y,inner_cp2.x,inner_cp2.y,inner_p2.x,inner_p2.y);
+                                ctx.lineTo(outer_p2.x, outer_p2.y);
+                                ctx.bezierCurveTo(outer_cp2.x,outer_cp2.y,outer_cp1.x,outer_cp1.y,outer_p1.x, outer_p1.y);
+                                ctx.fill();
+                        }
+                </script>
+        </body>
+</html>
