@@ -1,0 +1,60 @@
+﻿<!doctype html>
+<html>
+    <head>
+        <title>:la:</title>
+    </head>
+    <body>
+        <canvas id="la" width="400" height="400"></canvas>
+        <script>
+            var la=document.getElementById('la');
+            var even=true;
+            if(la.getContext){
+                var ctx=la.getContext('2d');
+                ctx.lineWidth=4;
+                setInterval(function(){
+                    ctx.fillStyle='#fff';
+                    ctx.fillRect(0,0,400,400);
+                    // body
+                    circle(ctx,200,200,190,true);
+                    //eyes
+                    circle(ctx,80,80,50,false);
+                    circle(ctx,300,60,50,false);
+
+                    even=!even;
+                    circle(ctx,80,300+(even ? 0 : 25),50,true);
+                    circle(ctx,330,280+(even ? 0 : 25),50,true);
+                    mouth(ctx,even);
+                },50);
+            }
+            function mouth(ctx,up){
+                var gradient=ctx.createRadialGradient(200,300,0,100,300,200);
+                gradient.addColorStop(0,'#bd41de');
+                gradient.addColorStop(1,'#9c29bd');
+                ctx.fillStyle=gradient;
+                ctx.fillRect(170,130,80,190);
+                ctx.beginPath();
+                ctx.rect(170,130,80,190);
+                ctx.fillStyle='red';
+                ctx.fillRect(170,(!up ? 210 : 230),50,50);
+            }
+            function circle(ctx,x,y,radius,useGradient){
+                var fill;
+                if(useGradient){
+                    fill = ctx.createRadialGradient(x+(x/2),y-(y/2),0,x,y,radius+(radius/2));
+                    fill.addColorStop(0,'rgb(224,180,224)');
+                    fill.addColorStop(1,'#bd5ad6');
+                }else{
+                    fill='#fff';
+                }
+                
+                ctx.beginPath();
+                ctx.arc(x,y,radius,0,Math.PI*2,true);
+                ctx.closePath();
+                ctx.fillStyle=fill;
+                ctx.fill();
+                ctx.strokeStyle='#bd5ad6';
+                ctx.stroke();
+            }
+        </script>
+    </body>
+</html>
