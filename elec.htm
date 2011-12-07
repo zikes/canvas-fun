@@ -1,0 +1,67 @@
+﻿<!doctype html> 
+<html lang="en"> 
+    <head> 
+        <title>elec</title> 
+        <style type="text/css"> 
+            #elec{
+                border:3px solid #0024a6;
+            }
+        </style> 
+    </head> 
+    <body> 
+        <canvas id="elec" width="200" height="200"></canvas> 
+        <script> 
+            var elec=document.getElementById('elec');
+            if(elec.getContext){
+                var ctx=elec.getContext('2d');
+                var angle=0;
+                setInterval(function(){
+                    if(angle>=360){angle=0};
+                    drawStripes(ctx,angle-=.5);
+                },25);
+            }
+            function drawStripes(ctx,starting_angle){
+                ctx.fillStyle='#003efa';
+                ctx.fillRect(0,0,200,200);
+ 
+                var thickness=12;
+                var distance=230;
+                
+                for(var angle=starting_angle; angle<360+starting_angle; angle+=(thickness*2)){
+                    triangle(ctx,160,160,angle,distance,thickness);
+                }
+                var radial = ctx.createRadialGradient(150,150,0,150,150,150);
+                    radial.addColorStop(0,'#003efa');
+                    radial.addColorStop(.3,'rgba(0,62,250,1)');
+                    radial.addColorStop(.5,'rgba(0,62,250,.5)');
+                    radial.addColorStop(1,'rgba(0,62,250,.2)');
+                ctx.fillStyle=radial;
+                ctx.fillRect(0,0,200,200);
+                ctx.font='bold 130pt helvetica';
+                ctx.textBaseline='bottom';
+                ctx.fillStyle='#fff';
+                ctx.fillText('e',110,233);
+ 
+            }
+            function triangle(ctx,from_x,from_y,angle,distance,thickness){
+                var rad=0.0174532925;
+                var p1 = {
+                    x:Math.round(from_x+distance*Math.cos(angle * rad)),
+                    y:Math.round(from_y+distance*Math.sin(angle * rad))
+                };
+                var p2 = {
+                    x:Math.round(from_x+distance*Math.cos((angle+thickness) * rad)),
+                    y:Math.round(from_y+distance*Math.sin((angle+thickness) * rad))
+                }
+ 
+                ctx.fillStyle='#002bba';
+                ctx.beginPath();
+                ctx.moveTo(from_x,from_y);
+                ctx.lineTo(p1.x,p1.y);
+                ctx.lineTo(p2.x,p2.y);
+                ctx.lineTo(from_x,from_y);
+                ctx.fill();
+            }
+        </script> 
+    </body> 
+</html> 
